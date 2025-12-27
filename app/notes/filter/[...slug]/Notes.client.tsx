@@ -22,13 +22,10 @@ function NotesClient({ tag }: NotesClientProps) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
-  const debounceSearch = useDebouncedCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearch(event.target.value);
-      setPage(1);
-    },
-    300
-  );
+  const debounceSearch = useDebouncedCallback((value: string) => {
+    setSearch(value);
+    setPage(1);
+  }, 300);
 
   const params: FetchNotesParams = {
     search,
@@ -60,7 +57,10 @@ function NotesClient({ tag }: NotesClientProps) {
         }}
       />
       <header className={css.toolbar}>
-        <SearchBox search={search} onChange={debounceSearch} />
+        <SearchBox
+          search={search}
+          onChange={(value) => debounceSearch(value)}
+        />
         {isSuccess && data?.totalPages && data.totalPages > 1 && (
           <Pagination
             currentPage={page}
